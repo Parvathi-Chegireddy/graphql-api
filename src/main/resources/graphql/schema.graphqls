@@ -1,0 +1,150 @@
+# ──────────────────────────────────────────────────────────────────────────
+# GraphQL Schema
+# Relationships modelled:
+#   One-to-Many  : Department  → Employee[]
+#   Many-to-One  : Employee    → Department
+#   One-to-One   : Employee   ↔ EmployeeProfile
+# ──────────────────────────────────────────────────────────────────────────
+
+type Query {
+
+    # ── Department ───────────────────────────────────────────────────
+    departments: [Department!]!
+    department(id: ID!): Department
+
+    # ── Employee ─────────────────────────────────────────────────────
+    employees: [Employee!]!
+    employee(id: ID!): Employee
+    employeesByDepartment(departmentId: ID!): [Employee!]!
+
+    # ── Profile ──────────────────────────────────────────────────────
+    employeeProfile(employeeId: ID!): EmployeeProfile
+
+    # ── Table Introspection (Table Explorer page) ─────────────────────
+    availableTables: [TableInfo!]!
+    tableStructure(tableName: String!): TableStructure
+    tableRecords(tableName: String!): TableRecords
+}
+
+type Mutation {
+
+    # ── Department ───────────────────────────────────────────────────
+    createDepartment(input: DepartmentInput!):  Department!
+    updateDepartment(id: ID!, input: DepartmentInput!): Department!
+    deleteDepartment(id: ID!): Boolean!
+
+    # ── Employee ─────────────────────────────────────────────────────
+    createEmployee(input: EmployeeInput!):  Employee!
+    updateEmployee(id: ID!, input: EmployeeInput!): Employee!
+    deleteEmployee(id: ID!): Boolean!
+
+    # ── Profile ──────────────────────────────────────────────────────
+    createEmployeeProfile(input: EmployeeProfileInput!): EmployeeProfile!
+    updateEmployeeProfile(employeeId: ID!, input: EmployeeProfileInput!): EmployeeProfile!
+}
+
+# ──────────────────────────────────────────────────────────────────────────
+# Domain Types
+# ──────────────────────────────────────────────────────────────────────────
+
+type Department {
+    id: ID!
+    name: String!
+    code: String!
+    location: String
+    budget: Float
+    createdAt: String
+    # One-to-Many: list of employees in this department
+    employees: [Employee!]
+    employeeCount: Int!
+}
+
+type Employee {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phone: String
+    salary: Float
+    hireDate: String
+    jobTitle: String
+    # Many-to-One: the department this employee belongs to
+    department: Department
+    # One-to-One: the employee's extended profile
+    profile: EmployeeProfile
+}
+
+type EmployeeProfile {
+    id: ID!
+    bio: String
+    skills: String
+    linkedinUrl: String
+    githubUrl: String
+    address: String
+    city: String
+    country: String
+    # One-to-One back-reference
+    employee: Employee
+}
+
+# ──────────────────────────────────────────────────────────────────────────
+# Input Types
+# ──────────────────────────────────────────────────────────────────────────
+
+input DepartmentInput {
+    name: String!
+    code: String!
+    location: String
+    budget: Float
+}
+
+input EmployeeInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    phone: String
+    salary: Float
+    hireDate: String
+    jobTitle: String
+    departmentId: ID!
+}
+
+input EmployeeProfileInput {
+    bio: String
+    skills: String
+    linkedinUrl: String
+    githubUrl: String
+    address: String
+    city: String
+    country: String
+    employeeId: ID!
+}
+
+# ──────────────────────────────────────────────────────────────────────────
+# Table Introspection Types
+# ──────────────────────────────────────────────────────────────────────────
+
+type TableInfo {
+    tableName: String!
+    rowCount: Int
+}
+
+type ColumnInfo {
+    columnName: String!
+    dataType: String!
+    isNullable: Boolean!
+    columnDefault: String
+    isPrimaryKey: Boolean!
+}
+
+type TableStructure {
+    tableName: String!
+    columns: [ColumnInfo!]!
+}
+
+type TableRecords {
+    tableName: String!
+    columns: [String!]!
+    rows: [String!]!
+    totalRows: Int!
+}
