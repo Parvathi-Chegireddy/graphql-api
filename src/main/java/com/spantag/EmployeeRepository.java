@@ -17,7 +17,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     boolean existsByEmail(String email);
 
-    /** Fetch employee with its department and profile in one query. */
     @Query("""
         SELECT e FROM Employee e
         LEFT JOIN FETCH e.department
@@ -26,7 +25,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
         """)
     Optional<Employee> findByIdWithDetails(@Param("id") Long id);
 
-    /** Fetch all employees with department (avoids N+1). */
     @Query("""
         SELECT DISTINCT e FROM Employee e
         LEFT JOIN FETCH e.department
