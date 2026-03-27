@@ -11,10 +11,8 @@ import java.util.Optional;
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
 
     Optional<Department> findByCode(String code);
-
-    boolean existsByCode(String code);
-
-    /** Pre-fetch employees to avoid N+1 on the departments list. */
+     boolean existsByCode(String code);
+    
     @Query("SELECT DISTINCT d FROM Department d LEFT JOIN FETCH d.employees")
     List<Department> findAllWithEmployees();
 }
