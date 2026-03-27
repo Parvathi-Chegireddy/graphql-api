@@ -4,14 +4,6 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-/**
- * EmployeeProfile entity.
- *
- * Relationship: ONE-TO-ONE  ↔  EmployeeProfile belongs to exactly one Employee.
- *
- * The FK {@code employee_id} lives on this side (owning side).
- * This allows profiles to be created separately from employees.
- */
 @Entity
 @Table(
     name = "employee_profile",
@@ -48,15 +40,10 @@ public class EmployeeProfile {
     @Column(length = 100)
     private String country;
 
-    // ── One-to-One (owning side): EmployeeProfile → Employee ───────
-    // Excluded from toString / equals / hashCode to avoid lazy-load & cycles
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false, unique = true)
     private Employee employee;
 
-    // ── Constructors ───────────────────────────────────────────────
-
-    /** Required by JPA. */
     public EmployeeProfile() {}
 
     /** Full constructor — used by the inner Builder. */
@@ -99,7 +86,6 @@ public class EmployeeProfile {
     public void setCountry(String country)        { this.country     = country;     }
     public void setEmployee(Employee employee)    { this.employee    = employee;    }
 
-    // ── equals & hashCode (scalar fields only; excludes lazy relation) ─
 
     @Override
     public boolean equals(Object o) {
@@ -122,7 +108,6 @@ public class EmployeeProfile {
                             githubUrl, address, city, country);
     }
 
-    // ── toString (excludes lazy relation to prevent N+1 / cycles) ──
 
     @Override
     public String toString() {
@@ -138,7 +123,7 @@ public class EmployeeProfile {
                '}';
     }
 
-    // ── Builder ────────────────────────────────────────────────────
+
 
     public static Builder builder() { return new Builder(); }
 
