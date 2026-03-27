@@ -6,14 +6,6 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Central GraphQL resolver.
- *
- * Uses Spring GraphQL annotations:
- *   @QueryMapping    → maps to Query type fields
- *   @MutationMapping → maps to Mutation type fields
- *   @SchemaMapping   → maps computed / relationship fields
- */
 @Controller
 public class GraphQLResolver {
 
@@ -32,7 +24,6 @@ public class GraphQLResolver {
         this.tableService      = tableService;
     }
 
-    // ── Department Queries ────────────────────────────────────────
 
     @QueryMapping
     public List<Department> departments() {
@@ -45,7 +36,6 @@ public class GraphQLResolver {
                 .orElseThrow(() -> new RuntimeException("Department not found: " + id));
     }
 
-    // ── Employee Queries ──────────────────────────────────────────
 
     @QueryMapping
     public List<Employee> employees() {
@@ -63,14 +53,11 @@ public class GraphQLResolver {
         return employeeService.findByDepartmentId(departmentId);
     }
 
-    // ── Profile Queries ───────────────────────────────────────────
 
     @QueryMapping
     public EmployeeProfile employeeProfile(@Argument Long employeeId) {
         return profileService.findByEmployeeId(employeeId).orElse(null);
     }
-
-    // ── Table Introspection Queries ───────────────────────────────
 
     @QueryMapping
     public List<TableDTOs.TableInfo> availableTables() {
@@ -87,27 +74,21 @@ public class GraphQLResolver {
         return tableService.getTableRecords(tableName);
     }
 
-    // ── Computed / Relationship Fields ────────────────────────────
-
-    /** Computed field: number of employees in a department. */
     @SchemaMapping(typeName = "Department", field = "employeeCount")
     public int employeeCount(Department department) {
         return department.getEmployees() == null ? 0 : department.getEmployees().size();
     }
 
-    /** Serialise LocalDateTime → String for GraphQL. */
     @SchemaMapping(typeName = "Department", field = "createdAt")
     public String createdAt(Department department) {
         return department.getCreatedAt() != null ? department.getCreatedAt().toString() : null;
     }
 
-    /** Serialise LocalDate → String for GraphQL. */
     @SchemaMapping(typeName = "Employee", field = "hireDate")
     public String hireDate(Employee employee) {
         return employee.getHireDate() != null ? employee.getHireDate().toString() : null;
     }
 
-    // ── Department Mutations ──────────────────────────────────────
 
     @MutationMapping
     public Department createDepartment(@Argument Map<String, Object> input) {
@@ -129,7 +110,6 @@ public class GraphQLResolver {
         return departmentService.delete(id);
     }
 
-    // ── Employee Mutations ────────────────────────────────────────
 
     @MutationMapping
     public Employee createEmployee(@Argument Map<String, Object> input) {
@@ -156,7 +136,6 @@ public class GraphQLResolver {
         return employeeService.delete(id);
     }
 
-    // ── Profile Mutations ─────────────────────────────────────────
 
     @MutationMapping
     public EmployeeProfile createEmployeeProfile(@Argument Map<String, Object> input) {
@@ -179,7 +158,6 @@ public class GraphQLResolver {
                 str(input, "country"));
     }
 
-    // ── Private Helpers ───────────────────────────────────────────
 
     private static String str(Map<String, Object> m, String key) {
         Object v = m.get(key);
