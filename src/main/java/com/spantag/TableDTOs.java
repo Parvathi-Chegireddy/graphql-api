@@ -3,17 +3,9 @@ package com.spantag;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Plain DTOs used by {@link TableIntrospectionService} and the GraphQL resolver
- * for the Table Explorer feature.
- *
- * These are NOT JPA entities — they carry JDBC metadata.
- */
 public final class TableDTOs {
 
     private TableDTOs() {}
-
-    // ── TableInfo ─────────────────────────────────────────────────
 
     public static class TableInfo {
         private String  tableName;
@@ -62,8 +54,6 @@ public final class TableDTOs {
             public TableInfo build() { return new TableInfo(tableName, rowCount); }
         }
     }
-
-    // ── ColumnInfo ────────────────────────────────────────────────
 
     public static class ColumnInfo {
         private String  columnName;
@@ -146,7 +136,6 @@ public final class TableDTOs {
         }
     }
 
-    // ── TableStructure ────────────────────────────────────────────
 
     public static class TableStructure {
         private String           tableName;
@@ -196,8 +185,6 @@ public final class TableDTOs {
             public TableStructure build() { return new TableStructure(tableName, columns); }
         }
     }
-
-    // ── TableRecords ──────────────────────────────────────────────
 
     public static class TableRecords {
         private String       tableName;
