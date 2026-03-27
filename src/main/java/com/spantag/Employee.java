@@ -45,14 +45,10 @@ public class Employee {
     @Column(name = "job_title")
     private String jobTitle;
 
-    // ── Many-to-One: many Employees → one Department ──────────────
-    // Excluded from toString / equals / hashCode to avoid lazy-load & cycles
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
-    // ── One-to-One: one Employee → one EmployeeProfile ────────────
-    // Excluded from toString / equals / hashCode to avoid lazy-load & cycles
     @OneToOne(
         mappedBy      = "employee",
         cascade       = CascadeType.ALL,
@@ -62,12 +58,8 @@ public class Employee {
     )
     private EmployeeProfile profile;
 
-    // ── Constructors ───────────────────────────────────────────────
-
-    /** Required by JPA. */
     public Employee() {}
 
-    /** Full constructor — used by the inner Builder. */
     public Employee(Long id, String firstName, String lastName, String email,
                     String phone, Double salary, LocalDate hireDate,
                     String jobTitle, Department department, EmployeeProfile profile) {
@@ -109,7 +101,6 @@ public class Employee {
     public void setDepartment(Department department) { this.department = department; }
     public void setProfile(EmployeeProfile profile)  { this.profile    = profile;    }
 
-    // ── equals & hashCode (scalar fields only; excludes lazy relations) ─
 
     @Override
     public boolean equals(Object o) {
@@ -132,7 +123,6 @@ public class Employee {
                             phone, salary, hireDate, jobTitle);
     }
 
-    // ── toString (excludes lazy relations to prevent N+1 / cycles) ─
 
     @Override
     public String toString() {
@@ -147,8 +137,6 @@ public class Employee {
                ", jobTitle='"  + jobTitle  + '\'' +
                '}';
     }
-
-    // ── Builder ────────────────────────────────────────────────────
 
     public static Builder builder() { return new Builder(); }
 
