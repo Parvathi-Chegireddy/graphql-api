@@ -9,12 +9,6 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
-/**
- * Queries PostgreSQL's {@code information_schema} and live tables
- * to produce metadata used by the Table Explorer page.
- *
- * Exposes only the three application tables to avoid leaking system info.
- */
 @Service
 public class TableIntrospectionService {
 
@@ -27,11 +21,9 @@ public class TableIntrospectionService {
         this.dataSource = dataSource;
     }
 
-    /** Only these tables are visible to the Table Explorer. */
     private static final List<String> ALLOWED_TABLES =
             List.of("department", "employee", "employee_profile");
 
-    // ─── Public API ───────────────────────────────────────────────
 
     public List<TableDTOs.TableInfo> getAvailableTables() {
         List<TableDTOs.TableInfo> result = new ArrayList<>();
@@ -153,7 +145,6 @@ public class TableIntrospectionService {
                 .build();
     }
 
-    // ─── Helpers ──────────────────────────────────────────────────
 
     private String sanitize(String tableName) {
         String lower = tableName.toLowerCase().trim();
