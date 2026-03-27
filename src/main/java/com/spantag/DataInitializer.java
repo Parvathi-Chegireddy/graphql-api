@@ -35,14 +35,13 @@ public class DataInitializer implements CommandLineRunner {
         log.info("  Seeding PostgreSQL database …");
         log.info("═══════════════════════════════════════════");
 
-        // ── Departments ──────────────────────────────────────────
         Department eng = deptRepo.save(dept("Engineering",      "ENG", "Bengaluru, India",  5_000_000.0));
         Department mkt = deptRepo.save(dept("Marketing",        "MKT", "Mumbai, India",     2_000_000.0));
         Department hr  = deptRepo.save(dept("Human Resources",  "HR",  "Delhi, India",      1_500_000.0));
         Department fin = deptRepo.save(dept("Finance",          "FIN", "Chennai, India",    3_000_000.0));
         Department dat = deptRepo.save(dept("Data Science",     "DS",  "Hyderabad, India",  2_500_000.0));
 
-        // ── Employees ─────────────────────────────────────────────
+
         Employee parvathi = empRepo.save(emp("parvathi",   "chegireddy",  "parvathi.chegireddy@company.com",
                 "+91-9999999999", 120_000.0, "2021-03-15", "Software Engineer", eng));
         Employee pradeep   = empRepo.save(emp("pradeep",     "S",    "pradeep.s@company.com",
@@ -66,10 +65,6 @@ public class DataInitializer implements CommandLineRunner {
 
         // ── Employee Profiles (One-to-One) ────────────────────────
         profileRepo.saveAll(List.of(
-           /* profile(alice, "Passionate full-stack developer with 8+ years in Java and React.",
-                    "Java, Spring Boot, React, GraphQL, Kubernetes, AWS",
-                    "https://linkedin.com/in/alice-johnson", "https://github.com/alice-j",
-                    "123 MG Road", "Bengaluru", "India"),*/
         		profile(parvathi, "Passionate java developer  in Java and React.",
                         "Java, Spring Boot, React, GraphQL",
                         "http://linkedin.com/in/chegireddy-parvathi-183376289", "https://github.com/Parvathi-Chegireddy/oauth2.git",
@@ -116,8 +111,6 @@ public class DataInitializer implements CommandLineRunner {
                 deptRepo.count(), empRepo.count(), profileRepo.count());
         log.info("═══════════════════════════════════════════");
     }
-
-    // ── Private factory helpers ───────────────────────────────────
 
     private static Department dept(String name, String code, String location, double budget) {
         return Department.builder()
