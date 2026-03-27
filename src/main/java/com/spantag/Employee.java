@@ -7,13 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
 
-/**
- * Employee entity.
- *
- * Relationships:
- *   MANY-TO-ONE  →  Employee belongs to one Department.
- *   ONE-TO-ONE   →  Employee optionally owns one EmployeeProfile.
- */
 @Entity
 @Table(
     name = "employee",
